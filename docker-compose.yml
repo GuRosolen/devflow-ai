@@ -1,0 +1,29 @@
+services:
+  postgres:
+    image: ankane/pgvector:latest
+    container_name: devflow_postgres
+    environment:
+      POSTGRES_USER: devuser
+      POSTGRES_PASSWORD: devpassword
+      POSTGRES_DB: devflow_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  # --- NOVO SERVIÇO: MONGODB ---
+  mongodb:
+    image: mongo:latest
+    container_name: devflow_mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password123
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongodata_novo:/data/db # <-- Usando um volume zerado
+
+volumes:
+  pgdata:
+  mongodata: 
+  mongodata_novo: # <-- Declarando o novo volume
