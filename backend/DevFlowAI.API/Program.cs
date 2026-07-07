@@ -28,7 +28,19 @@ var mongoClient = new MongoClient(builder.Configuration["MongoDb"]);
 var mongoDatabase = mongoClient.GetDatabase("DevFlowDB");
 builder.Services.AddSingleton(mongoDatabase);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("PermitirTudo", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 var app = builder.Build();
+
+app.UseCors("PermitirTudo");
 
 // 3. Ativa a interface visual do Swagger
 if (app.Environment.IsDevelopment())
