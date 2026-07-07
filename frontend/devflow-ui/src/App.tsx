@@ -14,7 +14,7 @@ function App() {
   const [novaDescricao, setNovaDescricao] = useState('');
   const [gerandoIA, setGerandoIA] = useState(false); // Estado para o botão da IA
 
-  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5009';
+  const apiUrl = 'https://devflow-ai-api-backend.onrender.com';
 
   const buscarTarefas = async () => {
     try {
