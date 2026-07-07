@@ -24,7 +24,7 @@ builder.Services.AddCors(options =>
 });
 
 // 3. Configura o Banco de Dados (MongoDB)
-var mongoClient = new MongoClient("mongodb://admin:password123@localhost:27018");
+var mongoClient = new MongoClient(builder.Configuration["MongoDb"]);
 var mongoDatabase = mongoClient.GetDatabase("DevFlowDB");
 builder.Services.AddSingleton(mongoDatabase);
 
