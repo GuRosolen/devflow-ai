@@ -51,7 +51,7 @@ function App() {
   };
 
   const moverTarefa = (taskId: number, novaColunaId: number) => {
-    axios.put(`http://localhost:5009/tasks/${taskId}/move?newColumnId=${novaColunaId}`)
+    axios.put(`${apiUrl}/tasks/${taskId}/move?newColumnId=${novaColunaId}`)
       .then(() => buscarTarefas())
       .catch(error => console.error("Erro ao mover:", error));
   };
@@ -67,7 +67,7 @@ function App() {
     setGerandoIA(true);
     try {
       // Mandamos um objeto com o título para a rota da IA
-      const response = await axios.post('http://localhost:5009/ai/suggest', {
+      const response = await axios.post('${apiUrl}/ai/suggest', {
         title: novoTitulo,
         description: "",
         columnId: 1
