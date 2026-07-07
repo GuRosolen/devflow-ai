@@ -67,7 +67,7 @@ function App() {
     setGerandoIA(true);
     try {
       // Mandamos um objeto com o título para a rota da IA
-      const response = await axios.post('${apiUrl}/ai/suggest', {
+      const response = await axios.post(`${apiUrl}/ai/suggest`, {
         title: novoTitulo,
         description: "",
         columnId: 1
