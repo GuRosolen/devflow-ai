@@ -5,7 +5,7 @@ interface TaskItem {
   id: number;
   title: string;
   description: string;
-  columnId: number; 
+  columnId: number;
 }
 
 function App() {
@@ -14,11 +14,13 @@ function App() {
   const [novaDescricao, setNovaDescricao] = useState('');
   const [gerandoIA, setGerandoIA] = useState(false); // Estado para o botão da IA
 
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5009';
+
   const buscarTarefas = async () => {
     try {
-      const res1 = await axios.get('http://localhost:5009/columns/1/tasks');
-      const res2 = await axios.get('http://localhost:5009/columns/2/tasks');
-      const res3 = await axios.get('http://localhost:5009/columns/3/tasks');
+      const res1 = await axios.get(`${apiUrl}/columns/1/tasks`);
+      const res2 = await axios.get(`${apiUrl}/columns/2/tasks`);
+      const res3 = await axios.get(`${apiUrl}/columns/3/tasks`);
       setTasks([...res1.data, ...res2.data, ...res3.data]);
     } catch (error) {
       console.error("Erro ao buscar dados:", error);
@@ -39,7 +41,7 @@ function App() {
       columnId: 1
     };
 
-    axios.post('http://localhost:5009/tasks', novaTarefa)
+    axios.post(`${apiUrl}/tasks`, novaTarefa)
       .then(() => {
         setNovoTitulo('');
         setNovaDescricao('');
@@ -67,7 +69,7 @@ function App() {
       // Mandamos um objeto com o título para a rota da IA
       const response = await axios.post('http://localhost:5009/ai/suggest', {
         title: novoTitulo,
-        description: "", 
+        description: "",
         columnId: 1
       });
       // Preenche o campo de descrição com a resposta do Gemini
@@ -86,12 +88,12 @@ function App() {
     return (
       <div style={{ backgroundColor: '#f8f9fa', padding: '20px', borderRadius: '12px', width: '320px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column' }}>
         <h2 style={{ fontSize: '18px', color: '#495057', borderBottom: '2px solid #dee2e6', paddingBottom: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          {titulo} 
+          {titulo}
           <span style={{ backgroundColor: '#e9ecef', padding: '4px 10px', borderRadius: '20px', fontSize: '12px', color: '#6c757d' }}>
             {tarefasDaColuna.length}
           </span>
         </h2>
-        
+
         <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginTop: '15px', flexGrow: 1 }}>
           {tarefasDaColuna.map(task => (
             <div key={task.id} style={{ backgroundColor: '#ffffff', padding: '15px', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', borderLeft: `4px solid ${corBorda}` }}>
@@ -103,16 +105,16 @@ function App() {
                   {task.description}
                 </p>
               )}
-              
+
               <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid #f1f3f5', paddingTop: '10px' }}>
-                <button 
+                <button
                   onClick={() => moverTarefa(task.id, colunaId - 1)}
                   disabled={colunaId === 1}
                   style={{ background: 'none', border: 'none', cursor: colunaId === 1 ? 'not-allowed' : 'pointer', opacity: colunaId === 1 ? 0 : 1, color: '#495057', fontWeight: 'bold' }}
                 >
                   ⬅️ Voltar
                 </button>
-                <button 
+                <button
                   onClick={() => moverTarefa(task.id, colunaId + 1)}
                   disabled={colunaId === 3}
                   style={{ background: 'none', border: 'none', cursor: colunaId === 3 ? 'not-allowed' : 'pointer', opacity: colunaId === 3 ? 0 : 1, color: '#495057', fontWeight: 'bold' }}
@@ -130,21 +132,21 @@ function App() {
   return (
     <div style={{ padding: '40px', fontFamily: 'system-ui, Arial, sans-serif', backgroundColor: '#e9ecef', minHeight: '100vh' }}>
       <h1 style={{ color: '#343a40', marginBottom: '30px' }}>DevFlow AI 🚀</h1>
-      
+
       <div style={{ backgroundColor: '#fff', padding: '20px', borderRadius: '8px', width: '320px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', marginBottom: '30px' }}>
         <h3 style={{ margin: '0 0 15px 0', color: '#495057' }}>Nova Tarefa</h3>
         <form onSubmit={criarTarefa} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-          <input 
-            type="text" 
-            placeholder="Título da tarefa..." 
+          <input
+            type="text"
+            placeholder="Título da tarefa..."
             value={novoTitulo}
             onChange={(e) => setNovoTitulo(e.target.value)}
             style={{ padding: '10px', borderRadius: '4px', border: '1px solid #ced4da' }}
           />
-          
+
           {/* Novo Botão da IA */}
-          <button 
-            type="button" 
+          <button
+            type="button"
             onClick={pedirDicasIA}
             disabled={gerandoIA}
             style={{ padding: '8px', backgroundColor: '#6f42c1', color: '#fff', border: 'none', borderRadius: '4px', cursor: gerandoIA ? 'wait' : 'pointer', fontSize: '13px', fontWeight: 'bold', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '5px' }}
@@ -152,8 +154,8 @@ function App() {
             {gerandoIA ? '⏳ Pensando...' : '✨ Sugerir subtarefas com IA'}
           </button>
 
-          <textarea 
-            placeholder="Descrição (opcional)..." 
+          <textarea
+            placeholder="Descrição (opcional)..."
             value={novaDescricao}
             onChange={(e) => setNovaDescricao(e.target.value)}
             style={{ padding: '10px', borderRadius: '4px', border: '1px solid #ced4da', resize: 'vertical', minHeight: '80px' }}
